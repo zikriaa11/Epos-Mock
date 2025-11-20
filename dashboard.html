@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Ghouri — EPOS Mock</title>
+  <style>
+    :root{--bg:#f3f5f7;--card:#fff;--muted:#7b8794;--accent:#2b7cff;--danger:#e04e4e;--success:#2aa65b}
+    body{font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;margin:0;background:var(--bg);color:#222}
+    .topbar{height:72px;background:#20232a;color:#fff;display:flex;align-items:center;padding:0 20px;gap:16px}
+    .logo{display:flex;align-items:center;gap:12px}
+    .logo img{height:40px;border-radius:4px}
+    .container{display:flex;height:calc(100vh - 72px)}
+    .sidebar{width:220px;background:linear-gradient(180deg,#ffffff,#f6f8fb);padding:20px;box-shadow:2px 0 6px rgba(0,0,0,0.03)}
+    .menu-btn{display:block;padding:18px 14px;border-radius:8px;margin-bottom:12px;text-decoration:none;color:#111;background:transparent;border:1px solid transparent}
+    .menu-btn:hover{background:#eef3ff}
+    .menu-btn.active{background:var(--accent);color:#fff}
+    .main{flex:1;padding:20px;display:flex;flex-direction:column}
+    .page-title{font-size:20px;margin-bottom:12px}
+    .top-actions{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+    .card{background:var(--card);border-radius:8px;padding:12px;box-shadow:0 1px 3px rgba(20,40,80,0.04)}
+
+    /* dashboard layout */
+    .dashboard{display:flex;gap:16px;height:100%}
+    .orders{flex:2;display:flex;flex-direction:column}
+    .callers{flex:1;display:flex;flex-direction:column;gap:12px}
+
+    .orders .controls{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+    .filters{display:flex;gap:8px}
+    .pagination{display:flex;gap:6px;align-items:center}
+    .pagination button{padding:6px 10px;border-radius:6px;border:1px solid #d8dee6;background:#fff}
+    .orders-table{margin-top:6px;border-collapse:collapse;width:100%}
+    .orders-row{display:flex;align-items:flex-start;border-bottom:1px solid #e9edf2;padding:12px 6px}
+    .col-receipt{width:80px;font-weight:600}
+    .col-total{width:90px}
+    .col-type{width:160px}
+    .col-complete{width:90px}
+    .col-status{width:90px}
+    .col-updated{flex:1;text-align:right}
+    .order-meta{color:var(--muted);font-size:13px}
+
+    .badge-paid{color:var(--success);font-weight:600}
+    .badge-unpaid{color:var(--danger);font-weight:600}
+
+    /* callers */
+    .caller{background:#fff;padding:10px;border-radius:8px;display:flex;flex-direction:column}
+    .caller .name{font-weight:700}
+    .caller .meta{color:var(--muted);font-size:13px}
+
+    /* crm popup mock */
+    .modal{position:fixed;left:0;top:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.35);}
+    .modal-card{width:420px;background:#fff;padding:16px;border-radius:8px}
+    .field{margin-bottom:8px}
+    label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
+    input[type=text],select,textarea{width:100%;padding:8px;border-radius:6px;border:1px solid #d6dbe2}
+    .radio-row{display:flex;gap:10px;align-items:center}
+    .circle-radio{display:inline-flex;align-items:center;gap:6px;padding:6px 8px;border-radius:50px;border:1px solid #d6dbe2}
+    .btn{padding:8px 12px;border-radius:8px;border:0;background:var(--accent);color:#fff}
+    .btn.secondary{background:#fff;border:1px solid #d6dbe2;color:#222}
+
+    /* login */
+    .login-wrap{height:calc(100vh - 72px);display:flex;align-items:center;justify-content:center}
+    .login-card{width:380px;background:#fff;padding:24px;border-radius:8px}
+
+    footer{font-size:13px;color:var(--muted);margin-top:12px}
+
+    /* responsive */
+    @media(max-width:900px){.sidebar{display:none}.dashboard{flex-direction:column}.callers{order:2}.orders{order:1}}
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="logo"><img src="/mnt/data/Capture - Copy.PNG" alt="logo"/><div style="font-weight:700">Ghouri EPOS Mock</div></div>
+    <div style="margin-left:auto;color:#cbd6ea">Prototype — demo only</div>
+  </div>
+
+  <div class="container">
+    <div class="sidebar card" id="leftMenu">
+      <a class="menu-btn active" data-page="dashboard">Dashboard
+
+---
+
+### Order Management (View)
+• Orders table with filters: Date, Status, Channel
+• Order detail side panel (items, notes, payment)
+• Pagination + search bar
+
+---
+
+### Kitchen Management (View)
+• Live orders queue
+• Status buttons: Preparing / Ready / Out for delivery
+• Timer on each order card
+• Priority tagging
+
+---
+
+### Callers Panel (Expanded View)
+• Clickable caller cards
+• Call history timeline
+• Quick actions: Create Order / Add Note / Block
+
+---
+
+### Settings / Configuration
+• User roles & permissions
+• Printer & device setup
+• Menu & pricing control
+• API keys & integrations</a>
+      <a class="menu-btn" data-page="orders">Order Management</a>
+      <a class="menu-btn" data-page="kitchen">Kitchen Management</a>
+      <a class="menu-btn" data-page="settings">Settings</a>
+    </div>
+
+    <div class="main">
+      <!-- Login simulated: when page loads you are "logged in"; simple toggle below for demo -->
+
+      <div id="page-dashboard" class="page">
+        <div class="page-title">Dashboard</div>
+        <div class="dashboard">
+          <div class="orders card">
+            <div class="controls">
+              <div class="filters">
+                <label style="font-weight:600;margin-right:8px">Filter:</label>
+                <select id="filterType"><option value="all">All</option><option value="delivery">Delivery</option><option value="collection">Collection</option><option value="instore">In-Store</option></select>
+              </div>
+
+              <div class="pagination card" style="padding:6px">
+                <button id="prevPage">&lt;</button>
+                <button class="page-btn" data-page="1">1</button>
+                <button class="page-btn" data-page="2">2</button>
+                <button class="page-btn" data-page="3">3</button>
+                <button id="nextPage">&gt;</button>
+              </div>
+            </div>
+
+            <div id="ordersList" style="overflow:auto;flex:1;padding-right:6px"></div>
+
+          </div>
+
+          <div class="callers">
+            <div class="card" style="padding:12px">
+              <div style="font-weight:700;margin-bottom:8px">Callers</div>
+              <div id="callerList" style="display:flex;flex-direction:column;gap:8px;max-height:calc(100vh - 220px);overflow:auto"></div>
+            </div>
+            <div class="card" style="padding:12px">
+              <div style="font-weight:700">Quick Actions</div>
+              <div style="margin-top:8px"><button class="btn" id="openCrm">Open CRM Mock</button></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Other pages placeholder -->
+      <div id="page-orders" class="page" style="display:none">
+        <div class="page-title">Order Management</div>
+        <div class="card">This is a placeholder for order management. Use Dashboard for the demo flow.</div>
+      </div>
+      <div id="page-kitchen" class="page" style="display:none">
+        <div class="page-title">Kitchen Management</div>
+        <div class="card">Kitchen live tickets placeholder.</div>
+      </div>
+      <div id="page-settings" class="page" style="display:none">
+        <div class="page-title">Settings</div>
+        <div class="card">App settings placeholder.</div>
+      </div>
+
+      <footer>Ghouri EPOS mock — demo only. Data is fake and generated locally.</footer>
+    </div>
+  </div>
+
+  <!-- CRM Mock Modal -->
+  <div id="crmModal" class="modal" style="display:none">
+    <div class="modal-card">
+      <div style="font-weight:700;margin-bottom:8px">CRM — Add Order</div>
+
+      <div class="field">
+        <label>Type</label>
+        <div class="radio-row">
+          <label class="circle-radio"><input type="radio" name="crmType" value="delivery" checked/> Delivery</label>
+          <label class="circle-radio"><input type="radio" name="crmType" value="takeaway"/> Takeaway</label>
+          <label class="circle-radio"><input type="radio" name="crmType" value="query"/> Query</label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Platform</label>
+        <select id="crmPlatform"><option>Phone</option><option>Web</option><option>App</option></select>
+      </div>
+
+      <div class="field"><label>Phone</label><input id="crmPhone" type="text"/></div>
+      <div class="field"><label>Name</label><input id="crmName" type="text"/></div>
+      <div class="field"><label>Address</label><textarea id="crmAddress" rows="2"></textarea></div>
+      <div class="field"><label>Amount</label><input id="crmAmount" type="text"/></div>
+
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px">
+        <button class="btn secondary" id="crmCancel">Cancel</button>
+        <button class="btn" id="crmSubmit">Submit</button>
+      </div>
+
+      <div id="crmMsg" style="margin-top:8px;color:var(--muted);font-size:13px"></div>
+    </div>
+  </div>
+
+  <script>
+    // --- Fake dataset (based on your screenshot) ---
+    const ORDERS = [];
+    // generate 30 orders
+    const types = ['Delivery','Collection','In-Store'];
+    const names = ['Nazia','Nikah','Saul','Bower','Karma','Hussain','Qais','Rox','Liam','Sana','Amir','Junaid'];
+    for(let i=41;i>=12;i--){
+      const t = types[Math.floor(Math.random()*types.length)];
+      const name = names[Math.floor(Math.random()*names.length)];
+      const amount = (Math.random()*35+5).toFixed(2);
+      const minutes = Math.floor(Math.random()*60)+1;
+      ORDERS.push({id:'#'+i, amount:'£'+amount, type:t, status: Math.random()>0.5?'Paid':'Unpaid', complete:'Pending', updated: minutes+' minutes ago', name:name, phone:'+44 77'+(Math.floor(Math.random()*9000000)+1000000), address: Math.floor(Math.random()*200)+' Example Lane, West Yorkshire'});
+    }
+
+    const CALLERS = [];
+    for(let i=0;i<8;i++) CALLERS.push({name:names[i%names.length],phone:'+44 77'+(Math.floor(Math.random()*9000000)+1000000),ago: (Math.floor(Math.random()*20)+1)+' mins ago'});
+
+    // --- simple pagination ---
+    let currentPage = 1; const pageSize = 10;
+    function renderOrders(){
+      const filter = document.getElementById('filterType').value;
+      const start = (currentPage-1)*pageSize; const end = start+pageSize;
+      const slice = ORDERS.slice(start,end).filter(o=>filter==='all'?true:o.type.toLowerCase().includes(filter));
+      const container = document.getElementById('ordersList'); container.innerHTML = '';
+      slice.forEach(o=>{
+        const row = document.createElement('div'); row.className='orders-row';
+        row.innerHTML = `
+          <div class='col-receipt'>${o.id}</div>
+          <div class='col-total'>${o.amount}</div>
+          <div class='col-type'><strong>${o.type}</strong><div class='order-meta'>${o.name} (${o.phone})<br>${o.address}</div></div>
+          <div class='col-complete'>${o.complete}</div>
+          <div class='col-status'>${o.status==='Paid'?"<span class='badge-paid'>Paid</span>":"<span class='badge-unpaid'>Unpaid</span>"}</div>
+          <div class='col-updated'>${o.updated}</div>
+        `;
+        // allow click to quick add to CRM
+        row.style.cursor='pointer';
+        row.onclick = ()=> openCrmWithOrder(o);
+        container.appendChild(row);
+      });
+    }
+
+    function renderCallers(){
+      const c = document.getElementById('callerList'); c.innerHTML='';
+      CALLERS.forEach(call=>{
+        const div = document.createElement('div'); div.className='caller';
+        div.innerHTML = `<div class='name'>${call.name}</div><div class='meta'>${call.phone} · Called ${call.ago}</div>`;
+        c.appendChild(div);
+      });
+    }
+
+    // menu navigation
+    document.querySelectorAll('.menu-btn').forEach(btn=>btn.addEventListener('click',()=>{
+      document.querySelectorAll('.menu-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      const page = btn.getAttribute('data-page');
+      document.querySelectorAll('.page').forEach(p=>p.style.display='none');
+      document.getElementById('page-'+page).style.display='block';
+    }));
+
+    // pagination handlers
+    document.getElementById('prevPage').addEventListener('click',()=>{ if(currentPage>1) currentPage--; renderOrders(); });
+    document.getElementById('nextPage').addEventListener('click',()=>{ if(currentPage*pageSize<ORDERS.length) currentPage++; renderOrders(); });
+    document.querySelectorAll('.page-btn').forEach(b=>b.addEventListener('click',()=>{ currentPage = Number(b.getAttribute('data-page')); renderOrders(); }));
+    document.getElementById('filterType').addEventListener('change',()=>{ currentPage=1; renderOrders(); });
+
+    // CRM modal actions
+    const crmModal = document.getElementById('crmModal');
+    document.getElementById('openCrm').addEventListener('click',()=>{ crmModal.style.display='flex'; document.getElementById('crmMsg').innerText='Manually fill or click an order to auto-fill.'});
+    document.getElementById('crmCancel').addEventListener('click',()=>crmModal.style.display='none');
+    document.getElementById('crmSubmit').addEventListener('click',()=>{
+      // fake submit
+      document.getElementById('crmMsg').innerText='Order submitted to CRM (demo).';
+      setTimeout(()=>{crmModal.style.display='none';document.getElementById('crmMsg').innerText='';},900);
+    });
+
+    function openCrmWithOrder(o){
+      crmModal.style.display='flex';
+      // prefill
+      document.querySelector(`input[name='crmType'][value='${o.type.toLowerCase()==='delivery'?'delivery':(o.type.toLowerCase().includes('collection')?'takeaway':'query')}']`).checked = true;
+      document.getElementById('crmPlatform').value = 'Phone';
+      document.getElementById('crmPhone').value = o.phone;
+      document.getElementById('crmName').value = o.name;
+      document.getElementById('crmAddress').value = o.address;
+      document.getElementById('crmAmount').value = o.amount;
+      document.getElementById('crmMsg').innerText='Prefilled from EPOS order. Click Submit to mock-send to CRM.';
+    }
+
+    // init
+    renderOrders(); renderCallers();
+
+    // small UX: let Enter close modal on submit
+    document.addEventListener('keydown',e=>{ if(e.key==='Escape') crmModal.style.display='none'; });
+
+  </script>
+</body>
+</html>
