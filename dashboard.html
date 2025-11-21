@@ -1,325 +1,64 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Freddy's Express | EPOS Dashboard</title>
-  < style >
-    body {
-      margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      background: #f4f6f9;
-    }
-
-    .topbar {
-      background: #111;
-      color: white;
-      padding: 15px 25px;
-      font-size: 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .logo {
-      font-weight: bold;
-      font-size: 22px;
-      color: #ffcc00;
-    }
-
-    .dashboard-container {
-      display: flex;
-      padding: 15px;
-      gap: 15px;
-    }
-
-    /* LEFT SIDE */
-    .orders-section {
-      flex: 3;
-      background: white;
-      padding: 15px;
-      border-radius: 6px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-    }
-
-    /* BUTTON BAR */
-    .action-bar {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 15px;
-    }
-
-    .action-bar button {
-      padding: 8px 14px;
-      border: none;
-      background: #111;
-      color: white;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 14px;
-    }
-
-    .action-bar button:hover {
-      background: #333;
-    }
-
-    /* ORDERS TABLE */
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 14px;
-    }
-
-    th {
-      background: #2e3440;
-      color: white;
-      padding: 10px;
-      text-align: left;
-    }
-
-    td {
-      padding: 10px;
-      border-bottom: 1px solid #ddd;
-      vertical-align: top;
-    }
-
-    tr:nth-child(even) {
-      background: #f8f8f8;
-    }
-
-    .status-pending {
-      color: red;
-      font-weight: bold;
-    }
-
-    .status-paid {
-      color: green;
-      font-weight: bold;
-    }
-
-    .pagination {
-      margin-top: 15px;
-      text-align: center;
-    }
-
-    .pagination a {
-      padding: 6px 10px;
-      margin: 2px;
-      border: 1px solid #ccc;
-      text-decoration: none;
-      color: black;
-      border-radius: 3px;
-    }
-
-    .pagination a.active {
-      background: #111;
-      color: white;
-    }
-
-    /* RIGHT PANEL */
-    .caller-panel {
-      flex: 1;
-      background: white;
-      padding: 15px;
-      border-radius: 6px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-    }
-
-    .caller {
-      padding: 10px;
-      border-bottom: 1px solid #ddd;
-    }
-
-    .caller strong {
-      display: block;
-    }
-
-    .caller span {
-      font-size: 13px;
-      color: gray;
-    }
-  </style>
+  <title>Freddy's Express - Dashboard</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="dashboard-body">
 
-<div class="topbar">
-  <div class="logo">🍔 Freddy's Express | EPOS Dashboard</div>
-  <div>Logged in: Admin</div>
+<div class="top-bar">
+  <h2>Freddy's Express • EPOS Dashboard</h2>
 </div>
 
-<div class="dashboard-container">
+<div class="dashboard-actions">
+  <button>New Orders</button>
+  <button>Completed</button>
+  <button>In Kitchen</button>
+  <button>Cancelled</button>
+  <button>Drivers</button>
+  <button>Stats</button>
+</div>
 
-  <!-- LEFT: ORDERS -->
-  <div class="orders-section">
+<div class="dashboard-layout">
 
-    <!-- TOP BUTTONS -->
-    <div class="action-bar">
-      <button>New Orders</button>
-      <button>All Orders</button>
-      <button>Delivery</button>
-      <button>Collection</button>
-      <button>In-Store</button>
-      <button>Refunds</button>
-      <button>Completed</button>
+  <!-- Orders Section -->
+  <div class="orders-panel">
+    <h3>Live Orders</h3>
+
+    <div class="order">
+      <b>#10023</b> | Ali Khan | Delivery | £26.50  
+      <div>Address: Street 12, Islamabad</div>
     </div>
 
-    <table>
-      <thead>
-        <tr>
-          <th>Receipt No.</th>
-          <th>Total</th>
-          <th>Type</th>
-          <th>Status</th>
-          <th>Payment</th>
-          <th>Last Updated</th>
-        </tr>
-      </thead>
-      <tbody>
+    <div class="order">
+      <b>#10024</b> | Sarah | Collection | £15.00  
+      <div>Pickup in 20 mins</div>
+    </div>
 
-        <tr>
-          <td>#41</td>
-          <td>£19.00</td>
-          <td>
-            Delivery - NAZIA (447300447523) <br>
-            52 Jeremy Lane <br>
-            Heckmondwike <br>
-            West Yorkshire <br>
-            WF16 9NP
-          </td>
-          <td class="status-pending">Pending</td>
-          <td class="status-paid">Paid</td>
-          <td>23 minutes ago</td>
-        </tr>
+    <div class="order">
+      <b>#10025</b> | Hamza | Delivery | £34.99  
+      <div>F-10 Markaz</div>
+    </div>
 
-        <tr>
-          <td>#40</td>
-          <td>£19.70</td>
-          <td>Online Collection - 07795 553 771</td>
-          <td class="status-pending">Pending</td>
-          <td class="status-paid">Paid</td>
-          <td>26 minutes ago</td>
-        </tr>
-
-        <tr>
-          <td>#39</td>
-          <td>£9.00</td>
-          <td>Collection - DEEPA (447017460528)</td>
-          <td class="status-pending">Pending</td>
-          <td class="status-paid">Paid</td>
-          <td>30 minutes ago</td>
-        </tr>
-
-        <tr>
-          <td>#37</td>
-          <td>£13.99</td>
-          <td>In-Store</td>
-          <td class="status-pending">Pending</td>
-          <td class="status-paid">Paid</td>
-          <td>50 minutes ago</td>
-        </tr>
-
-        <tr>
-          <td>#36</td>
-          <td>£16.50</td>
-          <td>
-            Delivery - SAUL (447745160012) <br>
-            3 Mayfair Lane <br>
-            Batley, West Yorkshire <br>
-            WF17 8AD
-          </td>
-          <td class="status-pending">Pending</td>
-          <td class="status-paid">Paid</td>
-          <td>1 hour ago</td>
-        </tr>
-
-        <tr>
-          <td>#35</td>
-          <td>£30.49</td>
-          <td>
-            Delivery - BOWER (441445545449) <br>
-            22 Fountains Avenue <br>
-            Batley, West Yorkshire <br>
-            WF17 7SS
-          </td>
-          <td class="status-pending">Pending</td>
-          <td class="status-paid">Paid</td>
-          <td>1 hour ago</td>
-        </tr>
-
-        <tr>
-          <td>#34</td>
-          <td>£22.00</td>
-          <td>Collection - SIM (44788834957)</td>
-          <td class="status-pending">Pending</td>
-          <td class="status-paid">Paid</td>
-          <td>31 minutes ago</td>
-        </tr>
-
-        <tr>
-          <td>#33</td>
-          <td>£13.50</td>
-          <td>Collection - HUSSAIN (447512344654)</td>
-          <td class="status-pending">Pending</td>
-          <td class="status-paid">Paid</td>
-          <td>32 minutes ago</td>
-        </tr>
-
-        <tr>
-          <td>#32</td>
-          <td>£9.00</td>
-          <td>Collection - DAVID (447523919906)</td>
-          <td class="status-pending">Pending</td>
-          <td class="status-paid">Paid</td>
-          <td>59 minutes ago</td>
-        </tr>
-
-        <tr>
-          <td>#31</td>
-          <td>£11.00</td>
-          <td>In-Store</td>
-          <td class="status-pending">Pending</td>
-          <td class="status-paid">Paid</td>
-          <td>1 hour ago</td>
-        </tr>
-
-      </tbody>
-    </table>
-
-    <!-- PAGINATION -->
-    <div class="pagination">
-      <a href="#">❮</a>
-      <a class="active" href="#">1</a>
-      <a href="#">2</a>
-      <a href="#">3</a>
-      <a href="#">❯</a>
+    <div class="order">
+      <b>#10026</b> | Ahsan | Delivery | £19.00  
+      <div>G-9</div>
     </div>
 
   </div>
 
-  <!-- RIGHT: CALLER PANEL -->
-  <div class="caller-panel">
-    <h3>📞 Callers</h3>
+  <!-- Callers Right Panel -->
+  <div class="callers-panel">
+    <h3>Incoming Callers</h3>
 
     <div class="caller">
-      <strong>Ali</strong>
-      <span>+44 7400 123456</span><br>
-      <span>Called 2 mins ago</span>
+      +44 7400 123456  
+      <div>Calling for 00:42</div>
     </div>
 
     <div class="caller">
-      <strong>Sarah</strong>
-      <span>+44 7333 221199</span><br>
-      <span>Called 5 mins ago</span>
-    </div>
-
-    <div class="caller">
-      <strong>Hassan</strong>
-      <span>+44 7123 445566</span><br>
-      <span>Called 10 mins ago</span>
-    </div>
-
-    <div class="caller">
-      <strong>Mike</strong>
-      <span>+44 7777 889900</span><br>
-      <span>Called 15 mins ago</span>
+      +44 7700 998877  
+      <div>Calling for 01:10</div>
     </div>
 
   </div>
