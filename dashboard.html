@@ -1,156 +1,325 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Freddy’s Express | Dashboard</title>
-
-  <style>
+  <title>Freddy's Express | EPOS Dashboard</title>
+  < style >
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f5f5f5;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f4f6f9;
     }
 
-    header {
+    .topbar {
       background: #111;
       color: white;
-      padding: 15px 20px;
+      padding: 15px 25px;
+      font-size: 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
 
-    .restaurant-name {
-      font-size: 20px;
+    .logo {
+      font-weight: bold;
+      font-size: 22px;
+      color: #ffcc00;
+    }
+
+    .dashboard-container {
+      display: flex;
+      padding: 15px;
+      gap: 15px;
+    }
+
+    /* LEFT SIDE */
+    .orders-section {
+      flex: 3;
+      background: white;
+      padding: 15px;
+      border-radius: 6px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    }
+
+    /* BUTTON BAR */
+    .action-bar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .action-bar button {
+      padding: 8px 14px;
+      border: none;
+      background: #111;
+      color: white;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .action-bar button:hover {
+      background: #333;
+    }
+
+    /* ORDERS TABLE */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    th {
+      background: #2e3440;
+      color: white;
+      padding: 10px;
+      text-align: left;
+    }
+
+    td {
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+      vertical-align: top;
+    }
+
+    tr:nth-child(even) {
+      background: #f8f8f8;
+    }
+
+    .status-pending {
+      color: red;
       font-weight: bold;
     }
 
-    .back-btn {
-      padding: 6px 12px;
-      background: white;
+    .status-paid {
+      color: green;
+      font-weight: bold;
+    }
+
+    .pagination {
+      margin-top: 15px;
+      text-align: center;
+    }
+
+    .pagination a {
+      padding: 6px 10px;
+      margin: 2px;
+      border: 1px solid #ccc;
+      text-decoration: none;
       color: black;
-      border-radius: 6px;
-      border: none;
-      cursor: pointer;
+      border-radius: 3px;
     }
 
-    .filters {
-      padding: 15px;
-      background: #fff;
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      border-bottom: 1px solid #ddd;
+    .pagination a.active {
+      background: #111;
+      color: white;
     }
 
-    .filter-btn {
-      padding: 6px 12px;
-      border-radius: 20px;
-      border: 1px solid #aaa;
-      background: #fafafa;
-      cursor: pointer;
-      font-size: 13px;
-    }
-
-    .filter-btn:hover {
-      background: #ddd;
-    }
-
-    .dashboard {
-      display: flex;
-      padding: 15px;
-    }
-
-    .orders {
-      width: 70%;
+    /* RIGHT PANEL */
+    .caller-panel {
+      flex: 1;
       background: white;
       padding: 15px;
-      border-radius: 8px;
-      margin-right: 15px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-      height: 500px;
-      overflow-y: auto;
-    }
-
-    .callers {
-      width: 30%;
-      background: white;
-      padding: 15px;
-      border-radius: 8px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-      height: 500px;
-      overflow-y: auto;
-    }
-
-    .order {
-      padding: 10px;
-      margin-bottom: 10px;
-      border: 1px solid #ddd;
       border-radius: 6px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
     }
 
     .caller {
       padding: 10px;
-      margin-bottom: 10px;
-      border-bottom: 1px solid #eee;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .caller strong {
+      display: block;
+    }
+
+    .caller span {
+      font-size: 13px;
+      color: gray;
     }
   </style>
 </head>
 <body>
 
-<header>
-  <div class="restaurant-name">Freddy’s Express — Dashboard</div>
-  <button class="back-btn" onclick="location.href='home.html'">Back</button>
-</header>
-
-<!-- Status Buttons -->
-<div class="filters">
-  <button class="filter-btn">New Orders</button>
-  <button class="filter-btn">Preparing</button>
-  <button class="filter-btn">Ready</button>
-  <button class="filter-btn">Out for Delivery</button>
-  <button class="filter-btn">Completed</button>
-  <button class="filter-btn">Cancelled</button>
-  <button class="filter-btn">Pre-orders</button>
+<div class="topbar">
+  <div class="logo">🍔 Freddy's Express | EPOS Dashboard</div>
+  <div>Logged in: Admin</div>
 </div>
 
-<div class="dashboard">
+<div class="dashboard-container">
 
-  <!-- Order List Section -->
-  <div class="orders">
-    <h3>Orders</h3>
+  <!-- LEFT: ORDERS -->
+  <div class="orders-section">
 
-    <!-- Your original order style goes here -->
-    <div class="order">
-      <b>Order #1001</b><br>
-      John Doe<br>
-      £25.40<br>
-      Delivery
+    <!-- TOP BUTTONS -->
+    <div class="action-bar">
+      <button>New Orders</button>
+      <button>All Orders</button>
+      <button>Delivery</button>
+      <button>Collection</button>
+      <button>In-Store</button>
+      <button>Refunds</button>
+      <button>Completed</button>
     </div>
 
-    <div class="order">
-      <b>Order #1002</b><br>
-      Sarah Khan<br>
-      £12.20<br>
-      Takeaway
+    <table>
+      <thead>
+        <tr>
+          <th>Receipt No.</th>
+          <th>Total</th>
+          <th>Type</th>
+          <th>Status</th>
+          <th>Payment</th>
+          <th>Last Updated</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <tr>
+          <td>#41</td>
+          <td>£19.00</td>
+          <td>
+            Delivery - NAZIA (447300447523) <br>
+            52 Jeremy Lane <br>
+            Heckmondwike <br>
+            West Yorkshire <br>
+            WF16 9NP
+          </td>
+          <td class="status-pending">Pending</td>
+          <td class="status-paid">Paid</td>
+          <td>23 minutes ago</td>
+        </tr>
+
+        <tr>
+          <td>#40</td>
+          <td>£19.70</td>
+          <td>Online Collection - 07795 553 771</td>
+          <td class="status-pending">Pending</td>
+          <td class="status-paid">Paid</td>
+          <td>26 minutes ago</td>
+        </tr>
+
+        <tr>
+          <td>#39</td>
+          <td>£9.00</td>
+          <td>Collection - DEEPA (447017460528)</td>
+          <td class="status-pending">Pending</td>
+          <td class="status-paid">Paid</td>
+          <td>30 minutes ago</td>
+        </tr>
+
+        <tr>
+          <td>#37</td>
+          <td>£13.99</td>
+          <td>In-Store</td>
+          <td class="status-pending">Pending</td>
+          <td class="status-paid">Paid</td>
+          <td>50 minutes ago</td>
+        </tr>
+
+        <tr>
+          <td>#36</td>
+          <td>£16.50</td>
+          <td>
+            Delivery - SAUL (447745160012) <br>
+            3 Mayfair Lane <br>
+            Batley, West Yorkshire <br>
+            WF17 8AD
+          </td>
+          <td class="status-pending">Pending</td>
+          <td class="status-paid">Paid</td>
+          <td>1 hour ago</td>
+        </tr>
+
+        <tr>
+          <td>#35</td>
+          <td>£30.49</td>
+          <td>
+            Delivery - BOWER (441445545449) <br>
+            22 Fountains Avenue <br>
+            Batley, West Yorkshire <br>
+            WF17 7SS
+          </td>
+          <td class="status-pending">Pending</td>
+          <td class="status-paid">Paid</td>
+          <td>1 hour ago</td>
+        </tr>
+
+        <tr>
+          <td>#34</td>
+          <td>£22.00</td>
+          <td>Collection - SIM (44788834957)</td>
+          <td class="status-pending">Pending</td>
+          <td class="status-paid">Paid</td>
+          <td>31 minutes ago</td>
+        </tr>
+
+        <tr>
+          <td>#33</td>
+          <td>£13.50</td>
+          <td>Collection - HUSSAIN (447512344654)</td>
+          <td class="status-pending">Pending</td>
+          <td class="status-paid">Paid</td>
+          <td>32 minutes ago</td>
+        </tr>
+
+        <tr>
+          <td>#32</td>
+          <td>£9.00</td>
+          <td>Collection - DAVID (447523919906)</td>
+          <td class="status-pending">Pending</td>
+          <td class="status-paid">Paid</td>
+          <td>59 minutes ago</td>
+        </tr>
+
+        <tr>
+          <td>#31</td>
+          <td>£11.00</td>
+          <td>In-Store</td>
+          <td class="status-pending">Pending</td>
+          <td class="status-paid">Paid</td>
+          <td>1 hour ago</td>
+        </tr>
+
+      </tbody>
+    </table>
+
+    <!-- PAGINATION -->
+    <div class="pagination">
+      <a href="#">❮</a>
+      <a class="active" href="#">1</a>
+      <a href="#">2</a>
+      <a href="#">3</a>
+      <a href="#">❯</a>
     </div>
 
   </div>
 
-  <!-- Callers Section -->
-  <div class="callers">
-    <h3>Callers</h3>
+  <!-- RIGHT: CALLER PANEL -->
+  <div class="caller-panel">
+    <h3>📞 Callers</h3>
 
     <div class="caller">
-      <b>Ali Raza</b><br>
-      +44 1234 567890<br>
-      Called 2 mins ago
+      <strong>Ali</strong>
+      <span>+44 7400 123456</span><br>
+      <span>Called 2 mins ago</span>
     </div>
 
     <div class="caller">
-      <b>Emma Jones</b><br>
-      +44 9876 543210<br>
-      Called 5 mins ago
+      <strong>Sarah</strong>
+      <span>+44 7333 221199</span><br>
+      <span>Called 5 mins ago</span>
+    </div>
+
+    <div class="caller">
+      <strong>Hassan</strong>
+      <span>+44 7123 445566</span><br>
+      <span>Called 10 mins ago</span>
+    </div>
+
+    <div class="caller">
+      <strong>Mike</strong>
+      <span>+44 7777 889900</span><br>
+      <span>Called 15 mins ago</span>
     </div>
 
   </div>
