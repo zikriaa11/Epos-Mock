@@ -1,69 +1,423 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Freddy's Express - Dashboard</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Freddy's Express | Master Dashboard</title>
+    <style>
+        :root {
+            --brand-dark: #1a1d21;
+            --brand-gold: #ffcc00;
+            --bg-light: #f4f6f8;
+            --white: #ffffff;
+            --text-main: #2c3e50;
+            --text-muted: #6c757d;
+            --border: #e9ecef;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --info: #17a2b8;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* HEADER STYLE */
+        header {
+            background-color: var(--brand-dark);
+            color: var(--white);
+            padding: 0 25px;
+            height: 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .brand {
+            font-size: 20px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .brand span { color: var(--brand-gold); }
+
+        .nav-controls a {
+            text-decoration: none;
+            color: var(--brand-dark);
+            background: var(--white);
+            padding: 8px 15px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .nav-controls a:hover { background: var(--brand-gold); }
+
+        /* FILTER BAR */
+        .filter-bar {
+            background: var(--white);
+            padding: 15px 25px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        .filter-btn {
+            border: 1px solid var(--border);
+            background: var(--bg-light);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--brand-dark);
+            color: var(--white);
+            border-color: var(--brand-dark);
+        }
+
+        /* MAIN LAYOUT */
+        .main-content {
+            display: flex;
+            flex: 1;
+            padding: 20px;
+            gap: 20px;
+            overflow: hidden; /* Prevents full page scroll, allows inner scroll */
+        }
+
+        /* LEFT: ORDERS TABLE */
+        .orders-container {
+            flex: 3;
+            background: var(--white);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .panel-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .panel-title { font-weight: 700; font-size: 16px; }
+
+        .table-wrapper {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        thead th {
+            position: sticky;
+            top: 0;
+            background: #f8f9fa;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-align: left;
+            padding: 12px 20px;
+            border-bottom: 2px solid var(--border);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        tbody tr { border-bottom: 1px solid var(--border); transition: background 0.1s; }
+        tbody tr:hover { background-color: #fcfcfc; }
+        tbody td { padding: 12px 20px; vertical-align: middle; }
+
+        /* STATUS BADGES */
+        .badge {
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .badge-pending { background: #fff3cd; color: #856404; }
+        .badge-paid { background: #d4edda; color: #155724; }
+        .badge-ready { background: #d1ecf1; color: #0c5460; }
+
+        /* RIGHT: CALLER PANEL */
+        .caller-panel {
+            flex: 1;
+            background: var(--white);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            min-width: 280px;
+        }
+
+        .caller-list {
+            padding: 0;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .caller-card {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .caller-card:hover { background-color: #fffdf0; }
+
+        .icon-box {
+            width: 35px;
+            height: 35px;
+            background: var(--brand-dark);
+            color: var(--brand-gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .caller-info strong { display: block; font-size: 14px; margin-bottom: 2px; }
+        .caller-info span { font-size: 12px; color: var(--text-muted); display: block; }
+        .caller-time { font-size: 11px; color: var(--text-muted); margin-left: auto; }
+
+        /* PAGINATION */
+        .pagination { padding: 15px; display: flex; justify-content: center; gap: 5px; border-top: 1px solid var(--border); }
+        .page-link { padding: 5px 10px; border: 1px solid var(--border); border-radius: 4px; text-decoration: none; color: var(--text-main); font-size: 13px; }
+        .page-link.active { background: var(--brand-dark); color: var(--white); border-color: var(--brand-dark); }
+
+    </style>
 </head>
-<body class="dashboard-body">
+<body>
 
-<div class="top-bar">
-  <h2>Freddy's Express • EPOS Dashboard</h2>
-</div>
+    <header>
+        <div class="brand">🍔 Freddy's Express <span>EPOS</span></div>
+        <div class="nav-controls">
+            <a href="home.html">← Back to Modules</a>
+        </div>
+    </header>
 
-<div class="dashboard-actions">
-  <button>New Orders</button>
-  <button>Completed</button>
-  <button>In Kitchen</button>
-  <button>Cancelled</button>
-  <button>Drivers</button>
-  <button>Stats</button>
-</div>
-
-<div class="dashboard-layout">
-
-  <!-- Orders Section -->
-  <div class="orders-panel">
-    <h3>Live Orders</h3>
-
-    <div class="order">
-      <b>#10023</b> | Ali Khan | Delivery | £26.50  
-      <div>Address: Street 12, Islamabad</div>
+    <div class="filter-bar">
+        <button class="filter-btn active">All Orders</button>
+        <button class="filter-btn">New Orders (5)</button>
+        <button class="filter-btn">Preparing</button>
+        <button class="filter-btn">Ready</button>
+        <button class="filter-btn">Delivery Drivers</button>
+        <button class="filter-btn">Collection</button>
+        <button class="filter-btn">Cancelled</button>
+        <button class="filter-btn">Refunds</button>
     </div>
 
-    <div class="order">
-      <b>#10024</b> | Sarah | Collection | £15.00  
-      <div>Pickup in 20 mins</div>
+    <div class="main-content">
+
+        <div class="orders-container">
+            <div class="panel-header">
+                <div class="panel-title">Live Orders Queue</div>
+                <div style="font-size: 13px; color: #666;">Updated: Just now</div>
+            </div>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Total</th>
+                            <th>Type / Customer</th>
+                            <th>Address / Notes</th>
+                            <th>Status</th>
+                            <th>Payment</th>
+                            <th>Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>#41</strong></td>
+                            <td>£19.00</td>
+                            <td>
+                                <strong>Delivery</strong><br>
+                                NAZIA (447300447523)
+                            </td>
+                            <td style="font-size: 12px; color: #555;">
+                                52 Jeremy Lane, WF16 9NP<br>
+                                Heckmondwike
+                            </td>
+                            <td><span class="badge badge-pending">Pending</span></td>
+                            <td><span class="badge badge-paid">Paid</span></td>
+                            <td>23m ago</td>
+                        </tr>
+
+                        <tr>
+                            <td><strong>#40</strong></td>
+                            <td>£19.70</td>
+                            <td>
+                                <strong>Collection</strong><br>
+                                Online (07795 553 771)
+                            </td>
+                            <td style="font-size: 12px; color: #555;">Online Order</td>
+                            <td><span class="badge badge-ready">Ready</span></td>
+                            <td><span class="badge badge-paid">Paid</span></td>
+                            <td>26m ago</td>
+                        </tr>
+
+                        <tr>
+                            <td><strong>#39</strong></td>
+                            <td>£9.00</td>
+                            <td>
+                                <strong>Collection</strong><br>
+                                DEEPA (447017460528)
+                            </td>
+                            <td style="font-size: 12px; color: #555;">Counter Service</td>
+                            <td><span class="badge badge-pending">Cooking</span></td>
+                            <td><span class="badge badge-paid">Paid</span></td>
+                            <td>30m ago</td>
+                        </tr>
+
+                        <tr>
+                            <td><strong>#36</strong></td>
+                            <td>£16.50</td>
+                            <td>
+                                <strong>Delivery</strong><br>
+                                SAUL (447745160012)
+                            </td>
+                            <td style="font-size: 12px; color: #555;">
+                                3 Mayfair Lane, WF17 8AD<br>
+                                Batley, West Yorkshire
+                            </td>
+                            <td><span class="badge badge-pending">Pending</span></td>
+                            <td><span class="badge badge-paid">Paid</span></td>
+                            <td>1h ago</td>
+                        </tr>
+
+                        <tr>
+                            <td><strong>#35</strong></td>
+                            <td>£30.49</td>
+                            <td>
+                                <strong>Delivery</strong><br>
+                                BOWER (441445545449)
+                            </td>
+                            <td style="font-size: 12px; color: #555;">
+                                22 Fountains Avenue<br>
+                                WF17 7SS
+                            </td>
+                            <td><span class="badge badge-pending">Driver Out</span></td>
+                            <td><span class="badge badge-paid">Paid</span></td>
+                            <td>1h ago</td>
+                        </tr>
+
+                        <tr>
+                            <td><strong>#34</strong></td>
+                            <td>£22.00</td>
+                            <td>
+                                <strong>Collection</strong><br>
+                                SIM (44788834957)
+                            </td>
+                            <td style="font-size: 12px; color: #555;">Walk-in</td>
+                            <td><span class="badge badge-paid">Complete</span></td>
+                            <td><span class="badge badge-paid">Paid</span></td>
+                            <td>31m ago</td>
+                        </tr>
+
+                        <tr>
+                            <td><strong>#33</strong></td>
+                            <td>£13.50</td>
+                            <td>
+                                <strong>Collection</strong><br>
+                                HUSSAIN
+                            </td>
+                            <td style="font-size: 12px; color: #555;">Walk-in</td>
+                            <td><span class="badge badge-paid">Complete</span></td>
+                            <td><span class="badge badge-paid">Paid</span></td>
+                            <td>32m ago</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="pagination">
+                <a href="#" class="page-link">❮</a>
+                <a href="#" class="page-link active">1</a>
+                <a href="#" class="page-link">2</a>
+                <a href="#" class="page-link">3</a>
+                <a href="#" class="page-link">❯</a>
+            </div>
+        </div>
+
+        <div class="caller-panel">
+            <div class="panel-header">
+                <div class="panel-title">📞 Caller ID</div>
+                <div style="font-size: 12px;" class="badge badge-pending">Live</div>
+            </div>
+            
+            <div class="caller-list">
+                <div class="caller-card">
+                    <div class="icon-box">📞</div>
+                    <div class="caller-info">
+                        <strong>Ali Raza</strong>
+                        <span>+44 7400 123456</span>
+                        <span style="color: green;">Incoming...</span>
+                    </div>
+                    <div class="caller-time">Now</div>
+                </div>
+
+                <div class="caller-card">
+                    <div class="icon-box" style="background: #eee; color: #555;">↩</div>
+                    <div class="caller-info">
+                        <strong>Sarah Khan</strong>
+                        <span>+44 7333 221199</span>
+                    </div>
+                    <div class="caller-time">5m</div>
+                </div>
+
+                <div class="caller-card">
+                    <div class="icon-box" style="background: #eee; color: #555;">↩</div>
+                    <div class="caller-info">
+                        <strong>Emma Jones</strong>
+                        <span>+44 9876 543210</span>
+                    </div>
+                    <div class="caller-time">12m</div>
+                </div>
+
+                <div class="caller-card">
+                    <div class="icon-box" style="background: #eee; color: #555;">↩</div>
+                    <div class="caller-info">
+                        <strong>Mike</strong>
+                        <span>+44 7777 889900</span>
+                    </div>
+                    <div class="caller-time">15m</div>
+                </div>
+            </div>
+        </div>
+
     </div>
-
-    <div class="order">
-      <b>#10025</b> | Hamza | Delivery | £34.99  
-      <div>F-10 Markaz</div>
-    </div>
-
-    <div class="order">
-      <b>#10026</b> | Ahsan | Delivery | £19.00  
-      <div>G-9</div>
-    </div>
-
-  </div>
-
-  <!-- Callers Right Panel -->
-  <div class="callers-panel">
-    <h3>Incoming Callers</h3>
-
-    <div class="caller">
-      +44 7400 123456  
-      <div>Calling for 00:42</div>
-    </div>
-
-    <div class="caller">
-      +44 7700 998877  
-      <div>Calling for 01:10</div>
-    </div>
-
-  </div>
-
-</div>
 
 </body>
 </html>
