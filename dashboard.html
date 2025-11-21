@@ -1,145 +1,161 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ghouri EPOS - Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background-color: #f8f9fa; 
-        }
-        .sidebar {
-            height: 100vh;
-            background-color: #343a40; /* Dark sidebar */
-            color: white;
-            padding-top: 20px;
-        }
-        .sidebar a {
-            color: #adb5bd;
-            padding: 10px 15px;
-            text-decoration: none;
-            display: block;
-            border-radius: 5px;
-            margin-bottom: 5px;
-        }
-        .sidebar a:hover {
-            background-color: #495057;
-            color: white;
-        }
-        .content {
-            padding: 20px;
-        }
-        .card {
-            border: none;
-            border-radius: 8px;
-        }
-        .metric-card {
-            background-color: #ffffff;
-            border-left: 5px solid #007bff; /* Primary blue highlight */
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Freddy’s Express | Dashboard</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+    }
+
+    header {
+      background: #111;
+      color: white;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .restaurant-name {
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .back-btn {
+      padding: 6px 12px;
+      background: white;
+      color: black;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+    }
+
+    .filters {
+      padding: 15px;
+      background: #fff;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .filter-btn {
+      padding: 6px 12px;
+      border-radius: 20px;
+      border: 1px solid #aaa;
+      background: #fafafa;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .filter-btn:hover {
+      background: #ddd;
+    }
+
+    .dashboard {
+      display: flex;
+      padding: 15px;
+    }
+
+    .orders {
+      width: 70%;
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      margin-right: 15px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      height: 500px;
+      overflow-y: auto;
+    }
+
+    .callers {
+      width: 30%;
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      height: 500px;
+      overflow-y: auto;
+    }
+
+    .order {
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+    }
+
+    .caller {
+      padding: 10px;
+      margin-bottom: 10px;
+      border-bottom: 1px solid #eee;
+    }
+  </style>
 </head>
 <body>
 
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-2 sidebar">
-                <h5 class="text-center mb-4">Ghouri EPOS</h5>
-                
-                <a href="home.html" class="btn btn-outline-light btn-sm mb-3">
-                    ← Back to Modules
-                </a>
+<header>
+  <div class="restaurant-name">Freddy’s Express — Dashboard</div>
+  <button class="back-btn" onclick="location.href='home.html'">Back</button>
+</header>
 
-                <a href="#" class="active">Dashboard</a>
-                <a href="#">New Order</a>
-                <a href="#">Customer Lookup</a>
-                <a href="#">Reports</a>
-                <a href="#">Settings</a>
-            </div>
+<!-- Status Buttons -->
+<div class="filters">
+  <button class="filter-btn">New Orders</button>
+  <button class="filter-btn">Preparing</button>
+  <button class="filter-btn">Ready</button>
+  <button class="filter-btn">Out for Delivery</button>
+  <button class="filter-btn">Completed</button>
+  <button class="filter-btn">Cancelled</button>
+  <button class="filter-btn">Pre-orders</button>
+</div>
 
-            <div class="col-md-10 content">
-                
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h1 class="h3 fw-bold">Order Management Dashboard</h1>
-                    <span class="badge bg-success">Status: Online</span>
-                </div>
+<div class="dashboard">
 
-                <div class="row mb-4">
-                    <div class="col-md-4">
-                        <div class="card shadow-sm p-3 metric-card">
-                            <h5 class="card-title text-muted">Total Orders (Today)</h5>
-                            <h2 class="card-text fw-bold">215</h2>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card shadow-sm p-3 metric-card" style="border-left: 5px solid #28a745;">
-                            <h5 class="card-title text-muted">Revenue (Today)</h5>
-                            <h2 class="card-text fw-bold">£4,890</h2>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card shadow-sm p-3 metric-card" style="border-left: 5px solid #ffc107;">
-                            <h5 class="card-title text-muted">Pending Delivery</h5>
-                            <h2 class="card-text fw-bold">14</h2>
-                        </div>
-                    </div>
-                </div>
+  <!-- Order List Section -->
+  <div class="orders">
+    <h3>Orders</h3>
 
-                <div class="card shadow">
-                    <div class="card-header bg-white">
-                        <h5 class="mb-0">Live Order List</h5>
-                    </div>
-                    <div class="card-body p-0">
-                        <table class="table table-striped table-hover mb-0">
-                            <thead>
-                                <tr>
-                                    <th># Order ID</th>
-                                    <th>Time</th>
-                                    <th>Customer</th>
-                                    <th>Platform</th>
-                                    <th>Status</th>
-                                    <th>Total</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>#1001</td>
-                                    <td>14:20</td>
-                                    <td>J. Smith</td>
-                                    <td>Phone</td>
-                                    <td><span class="badge bg-warning text-dark">Preparing</span></td>
-                                    <td>£35.50</td>
-                                    <td><button class="btn btn-sm btn-info">View</button></td>
-                                </tr>
-                                <tr>
-                                    <td>#1002</td>
-                                    <td>14:15</td>
-                                    <td>A. Khan</td>
-                                    <td>App</td>
-                                    <td><span class="badge bg-success">Delivered</span></td>
-                                    <td>£52.00</td>
-                                    <td><button class="btn btn-sm btn-info">View</button></td>
-                                </tr>
-                                <tr>
-                                    <td>#1003</td>
-                                    <td>14:05</td>
-                                    <td>M. Bell</td>
-                                    <td>Just Eat</td>
-                                    <td><span class="badge bg-primary">Dispatch</span></td>
-                                    <td>£22.99</td>
-                                    <td><button class="btn btn-sm btn-info">View</button></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-            </div>
-        </div>
+    <!-- Your original order style goes here -->
+    <div class="order">
+      <b>Order #1001</b><br>
+      John Doe<br>
+      £25.40<br>
+      Delivery
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <div class="order">
+      <b>Order #1002</b><br>
+      Sarah Khan<br>
+      £12.20<br>
+      Takeaway
+    </div>
+
+  </div>
+
+  <!-- Callers Section -->
+  <div class="callers">
+    <h3>Callers</h3>
+
+    <div class="caller">
+      <b>Ali Raza</b><br>
+      +44 1234 567890<br>
+      Called 2 mins ago
+    </div>
+
+    <div class="caller">
+      <b>Emma Jones</b><br>
+      +44 9876 543210<br>
+      Called 5 mins ago
+    </div>
+
+  </div>
+
+</div>
+
 </body>
 </html>
